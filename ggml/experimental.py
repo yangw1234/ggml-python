@@ -21,7 +21,7 @@ def default_context() -> "Context":
 class InitParams:
     def __init__(
         self,
-        mem_size: int = 16 * 1024 * 1024,
+        mem_size: int = 16 *1024 * 1024 * 1024,
         mem_buffer: Optional[ctypes.c_void_p] = None,
         no_alloc: bool = False,
     ):
@@ -178,7 +178,7 @@ class Tensor:
         array = ctypes.cast(
             ggml.ggml_get_data(tensor.tensor), ctypes.POINTER(ctypes_type)
         )
-        arr = np.ctypeslib.as_array(array, shape=x.shape)
+        arr = np.ctypeslib.as_array(array, shape=tuple(reversed(x.shape))).T
         arr[:] = x
         return tensor
 
