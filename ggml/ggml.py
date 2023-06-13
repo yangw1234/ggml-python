@@ -31,7 +31,7 @@ def load_shared_library(lib_base_name: str):
         os.add_dll_directory(str(_base_path))
         cdll_args["winmode"] = 0
     
-    _lib_paths = [pathlib.Path("/home/cpx/anaconda3/envs/yang-chat/lib/libllama.so")]
+    _lib_paths = [pathlib.Path("/home/cpx/yang/llama-cpp-python/vendor/llama.cpp/libllama.so")]
 
     # Try to load the shared library, handling potential errors
     for _lib_path in _lib_paths:
@@ -738,6 +738,52 @@ lib.ggml_new_tensor.argtypes = [
     ctypes.POINTER(ctypes.c_int64),
 ]
 lib.ggml_new_tensor.restype = ctypes.POINTER(ggml_tensor)
+
+
+def ggml_new_tensor_impl(
+    ctx: ggml_context_p,
+    type: ctypes.c_int,
+    n_dims: ctypes.c_int,
+    ne,  # type: ctypes.Array[ctypes.c_int64] # type: ignore
+    data,  # type: ctypes.c_void_p # type: ignore
+):  # type: (...) -> ctypes._Pointer[ggml_tensor] # type: ignore
+    return lib.ggml_new_tensor_impl(ctx, type, n_dims, ne, data)
+
+
+lib.ggml_new_tensor_impl.argtypes = [
+    ggml_context_p,
+    ctypes.c_int,
+    ctypes.c_int,
+    ctypes.POINTER(ctypes.c_int64),
+    ctypes.c_void_p
+]
+lib.ggml_new_tensor_impl.restype = ctypes.POINTER(ggml_tensor)
+
+def ggml_compute_forward_mul_mat_q_fp32(ctx: ggml_context_p,
+                                        src_0_ne, # type: ctypes.Array[ctypes.c_int64] # type: ignore
+                                        src_0_data, # type: ctypes.c_void_p # type: ignore
+                                        src_1_ne, # type: ctypes.Array[ctypes.c_int64] # type: ignore
+                                        src_1_data, # type: ctypes.c_void_p # type: ignore
+                                        result, # type: ctypes.c_void_p # type: ignore
+                                        ) -> None:
+
+    # ctx = ctx.context
+    # src_0_ne = (ctypes.c_int64 * 2)(*src_0_ne)
+    # src_0_data = ctypes.c_void_p(src_0_data)
+    # src_1_ne = (ctypes.c_int64 * 2)(*src_1_ne)
+    # src_1_data = ctypes.c_void_p(src_1_data)
+    # result = ctypes.c_void_p(result)
+
+    return lib.ggml_compute_forward_mul_mat_q_fp32(ctx, src_0_ne, src_0_data, src_1_ne, src_1_data, result)
+
+
+lib.ggml_compute_forward_mul_mat_q_fp32.argtypes = [ggml_context_p,
+                                                    ctypes.POINTER(ctypes.c_int64),
+                                                    ctypes.c_void_p,
+                                                    ctypes.POINTER(ctypes.c_int64),
+                                                    ctypes.c_void_p,
+                                                    ctypes.c_void_p]
+lib.ggml_compute_forward_mul_mat_q_fp32.restype = None
 
 
 # GGML_API struct ggml_tensor * ggml_new_tensor_1d(

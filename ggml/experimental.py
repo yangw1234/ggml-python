@@ -127,7 +127,7 @@ class Tensor:
         )
         array = ctypes.cast(self.data, ctypes.POINTER(ctypes_type))
         shape = tuple(reversed(self.shape))
-        return np.ctypeslib.as_array(array, shape=shape).T
+        return np.ctypeslib.as_array(array, shape=shape) #.T
 
     # Magic methods
     def __len__(self):
